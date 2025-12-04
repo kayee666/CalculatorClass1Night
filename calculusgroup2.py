@@ -1,31 +1,53 @@
-import streamlit as st import numpy as np import sympy as sp import
-matplotlib.pyplot as plt
+import streamlit as st
+import numpy as np
+import sympy as sp
+import matplotlib.pyplot as plt
 
-st.set_page_config( page_title=“Function & Derivative Plotter”,
-layout=“wide”, page_icon=“📈”, )
+st.set_page_config(
+    page_title="Function & Derivative Plotter",
+    layout="wide",
+    page_icon="📈",
+)
 
-st.markdown(““”
-“““, unsafe_allow_html=True)
+st.markdown("""
+<style>
+    .big-title {
+        font-size: 40px !important;
+        font-weight: 700;
+        text-align: center;
+        color: #4FC3F7;
+    }
+    .sub-box {
+        background: rgba(255,255,255,0.07);
+        padding: 20px;
+        border-radius: 12px;
+        margin-bottom: 20px;
+        border: 1px solid rgba(255,255,255,0.1);
+    }
+</style>
+""", unsafe_allow_html=True)
 
-st.markdown(“
+st.markdown("<div class='big-title'>📈 Function & Derivative Visualizer</div>", unsafe_allow_html=True)
+st.write("Masukkan fungsi matematika, lalu lihat grafik fungsi dan turunannya secara langsung!")
 
-📈 Function & Derivative Visualizer
-
-“, unsafe_allow_html=True) st.write(”Masukkan fungsi matematika, lalu
-lihat grafik fungsi dan turunannya secara langsung!“)
-
-with st.sidebar: st.header(“⚙ Pengaturan Input”) function_text =
-st.text_input( “Masukkan fungsi f(x):”, value=“x2”, help=“Contoh:
-sin(x), exp(x), x3 - 2*x” )
+with st.sidebar:
+    st.header("⚙ Pengaturan Input")
+    function_text = st.text_input(
+        "Masukkan fungsi f(x):",
+        value="x**2",
+        help="Contoh: sin(x), exp(x), x**3 - 2*x"
+    )
 
     range_min = st.number_input("Range Minimum (x)", value=-10)
     range_max = st.number_input("Range Maximum (x)", value=10)
 
     num_points = st.slider("Jumlah titik (resolusi)", 200, 2000, 500)
 
-x = sp.symbols(“x”)
+x = sp.symbols("x")
 
-try: func = sp.sympify(function_text) derivative = sp.diff(func, x)
+try:
+    func = sp.sympify(function_text)
+    derivative = sp.diff(func, x)
 
     st.markdown("### 🧮 Turunan Simbolik f'(x)")
     st.latex(sp.latex(derivative))
@@ -59,5 +81,6 @@ try: func = sp.sympify(function_text) derivative = sp.diff(func, x)
         st.pyplot(fig2)
         st.markdown("</div>", unsafe_allow_html=True)
 
-except Exception as e: st.error(“⚠ Terjadi kesalahan saat memproses
-fungsi. Periksa kembali input Anda.”) st.error(str(e))
+except Exception as e:
+    st.error("⚠ Terjadi kesalahan saat memproses fungsi. Periksa kembali input Anda.")
+    st.error(str(e))
