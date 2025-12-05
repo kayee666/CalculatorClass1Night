@@ -121,7 +121,7 @@ animate();
 st.markdown("<div class='big-title'>📈 Function & Derivative Visualizer</div>", unsafe_allow_html=True)
 
 # =======================
-# Animasi 3D Kalkulus di Main Display
+# Animasi 3D Kalkulus di Main Display (warna latar #e0ffff)
 # =======================
 st.markdown("""
 <div id="calc3d"></div>
@@ -132,8 +132,8 @@ st.markdown("""
     height: 400px;
     margin: 0 auto 40px auto;
     border-radius: 12px;
-    background: radial-gradient(circle at center, #1e1e1e, #000);
-    box-shadow: 0 0 20px rgba(255,255,255,0.2);
+    background: #e0ffff; /* Warna latar diganti */
+    box-shadow: 0 0 20px rgba(0,0,0,0.2);
 }
 </style>
 
@@ -163,7 +163,7 @@ loader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json
             height: 0.3,
             curveSegments: 12,
         });
-        const material = new THREE.MeshPhongMaterial({color: 0xffc0cb, shininess: 80});
+        const material = new THREE.MeshPhongMaterial({color: 0x4682b4, shininess: 100});
         const mesh = new THREE.Mesh(geometry, material);
         mesh.position.set(Math.sin(i)*5, Math.cos(i)*3, i-3);
         group.add(mesh);
@@ -200,7 +200,6 @@ try:
     y_vals = f_num(x_vals)
     dy_vals = df_num(x_vals)
 
-    # ============= 2D Plot =============
     if plot_mode == "2D":
         col1, col2 = st.columns(2)
         with col1:
@@ -219,21 +218,16 @@ try:
             ax2.grid(True, linestyle="--", alpha=0.5)
             st.pyplot(fig2)
             st.markdown("</div>", unsafe_allow_html=True)
-
-    # ============= 3D Plot =============
     else:
         st.markdown("<div class='sub-box'>", unsafe_allow_html=True)
         st.subheader("3D Interactive Curve f(x) & f'(x)")
-
         z_vals = np.zeros_like(x_vals)
         z_vals2 = np.ones_like(x_vals)
-
         fig3d = go.Figure()
         fig3d.add_trace(go.Scatter3d(x=x_vals, y=y_vals, z=z_vals, mode='lines',
                                      line=dict(color='lightblue', width=5), name='f(x)'))
         fig3d.add_trace(go.Scatter3d(x=x_vals, y=dy_vals, z=z_vals2, mode='lines',
                                      line=dict(color='pink', width=5), name="f'(x)"))
-
         fig3d.update_layout(
             scene=dict(
                 xaxis_title='x',
@@ -243,10 +237,8 @@ try:
             ),
             margin=dict(l=0, r=0, b=0, t=0), height=600
         )
-
         st.plotly_chart(fig3d, use_container_width=True)
         st.markdown("</div>", unsafe_allow_html=True)
-
 except Exception as e:
     st.error("Error processing the function.")
     st.error(str(e))
