@@ -20,19 +20,19 @@ range_max = st.sidebar.number_input("Range Maximum (x)", value=5)
 num_points = st.sidebar.slider("Number of points", 200, 2000, 500)
 plot_mode = st.sidebar.radio("Plot Mode:", ["2D", "3D"])
 
-# GIF kucing di bawah sidebar
+# GIF kucing di sidebar
 st.sidebar.markdown(
     """
-    <div style=\"margin-top: 50px; text-align:center;\">
-        <img src=\"https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif\" 
-        style=\"width:150px; border-radius:12px; box-shadow:0 0 12px rgba(255,255,255,0.6);\" 
-        alt=\"Cat GIF\">
+    <div style="margin-top: 50px; text-align:center;">
+        <img src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif" 
+        style="width:150px; border-radius:12px; box-shadow:0 0 12px rgba(255,255,255,0.6);" 
+        alt="Cat GIF">
     </div>
     """, unsafe_allow_html=True
 )
 
 # =======================
-# Main background + title
+# Background + Title
 # =======================
 st.markdown("""
 <style>
@@ -57,7 +57,82 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+# ================
+# 3D Background Animasi Calculus Symbols
+# ================
+st.markdown("""
+<!-- Canvas Background -->
+<canvas id="calcCanvas"></canvas>
+
+<style>
+#calcCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+    filter: blur(1px) brightness(1.12);
+}
+</style>
+
+<script>
+// Setup canvas
+const canvas = document.getElementById('calcCanvas');
+const ctx = canvas.getContext('2d');
+
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.onresize = resizeCanvas;
+
+// Calculus symbols
+const symbols = ["∫", "∂", "∇", "Σ", "∞", "√", "π", "dx", "dy", "lim", "f’", "∂x", "∂y"];
+
+let particles = [];
+for (let i = 0; i < 40; i++) {
+    particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        z: Math.random() * 3 + 0.5,
+        vx: (Math.random() - 0.5) * 0.4,
+        vy: (Math.random() - 0.5) * 0.4,
+        symbol: symbols[Math.floor(Math.random() * symbols.length)],
+        size: Math.random() * 25 + 18
+    });
+}
+
+function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    particles.forEach(p => {
+        ctx.font = (p.size * p.z) + "px serif";
+        ctx.fillStyle = "rgba(255,255,255,0.35)";
+        ctx.fillText(p.symbol, p.x, p.y);
+
+        p.x += p.vx * p.z;
+        p.y += p.vy * p.z;
+
+        if (p.x < -50) p.x = canvas.width + 50;
+        if (p.y < -50) p.y = canvas.height + 50;
+        if (p.x > canvas.width + 50) p.x = -50;
+        if (p.y > canvas.height + 50) p.y = -50;
+    });
+
+    requestAnimationFrame(animate);
+}
+animate();
+</script>
+""", unsafe_allow_html=True)
+
+# =======================
+# Title
+# =======================
 st.markdown("<div class='big-title'>📈 Function & Derivative Visualizer</div>", unsafe_allow_html=True)
+
 
 # =======================
 # Symbolic Math
@@ -78,9 +153,7 @@ try:
     y_vals = f_num(x_vals)
     dy_vals = df_num(x_vals)
 
-    # --------------------------
-    # 2D plotting
-    # --------------------------
+    # ============= 2D Plot =============
     if plot_mode == "2D":
         col1, col2 = st.columns(2)
 
@@ -102,12 +175,11 @@ try:
             st.pyplot(fig2)
             st.markdown("</div>", unsafe_allow_html=True)
 
-    # --------------------------
-    # 3D plotting
-    # --------------------------
+    # ============= 3D Plot =============
     else:
         st.markdown("<div class='sub-box'>", unsafe_allow_html=True)
         st.subheader("3D Interactive Curve f(x) & f'(x)")
+
         z_vals = np.zeros_like(x_vals)
         z_vals2 = np.ones_like(x_vals)
 
@@ -116,11 +188,17 @@ try:
                                      line=dict(color='lightblue', width=5), name='f(x)'))
         fig3d.add_trace(go.Scatter3d(x=x_vals, y=dy_vals, z=z_vals2, mode='lines',
                                      line=dict(color='pink', width=5), name="f'(x)"))
-        fig3d.update_layout(scene=dict(xaxis_title='x', 
-                                       yaxis_title='y', 
-                                       zaxis_title='Curve ID',
-                                       bgcolor='rgba(0,0,0,0)'),
-                            margin=dict(l=0, r=0, b=0, t=0), height=600)
+
+        fig3d.update_layout(
+            scene=dict(
+                xaxis_title='x',
+                yaxis_title='y',
+                zaxis_title='Curve ID',
+                bgcolor='rgba(0,0,0,0)'
+            ),
+            margin=dict(l=0, r=0, b=0, t=0), height=600
+        )
+
         st.plotly_chart(fig3d, use_container_width=True)
         st.markdown("</div>", unsafe_allow_html=True)
 
