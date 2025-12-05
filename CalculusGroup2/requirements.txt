@@ -3,4 +3,3 @@ sympy
 numpy
 matplotlib
 plotly
-run page1.py
