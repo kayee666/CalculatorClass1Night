@@ -57,9 +57,9 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# ================
+# =======================
 # 3D Background Animasi Calculus Symbols (floating)
-# ================
+# =======================
 st.markdown("""
 <canvas id="calcCanvas"></canvas>
 <style>
@@ -121,7 +121,7 @@ animate();
 st.markdown("<div class='big-title'>📈 Function & Derivative Visualizer</div>", unsafe_allow_html=True)
 
 # =======================
-# Animasi 3D Kalkulus di Main Display (warna latar #e0ffff)
+# Animasi 3D Kalkulus di Main Display (warna simbol #9370db)
 # =======================
 st.markdown("""
 <div id="calc3d"></div>
@@ -132,7 +132,7 @@ st.markdown("""
     height: 400px;
     margin: 0 auto 40px auto;
     border-radius: 12px;
-    background: #e0ffff; /* Warna latar diganti */
+    background: #e0ffff; /* Latar aqua muda */
     box-shadow: 0 0 20px rgba(0,0,0,0.2);
 }
 </style>
@@ -147,9 +147,11 @@ renderer.setSize(container.clientWidth, 400);
 container.appendChild(renderer.domElement);
 
 // Cahaya
-const light = new THREE.PointLight(0xffffff, 1);
+const light = new THREE.PointLight(0xffffff, 1.2);
 light.position.set(10, 10, 10);
 scene.add(light);
+const ambient = new THREE.AmbientLight(0xffffff, 0.6);
+scene.add(ambient);
 
 // Objek simbol kalkulus 3D
 const loader = new THREE.FontLoader();
@@ -160,10 +162,14 @@ loader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json
         const geometry = new THREE.TextGeometry(s, {
             font: font,
             size: 2,
-            height: 0.3,
+            height: 0.4,
             curveSegments: 12,
         });
-        const material = new THREE.MeshPhongMaterial({color: 0x4682b4, shininess: 100});
+        const material = new THREE.MeshPhongMaterial({
+            color: 0x9370db,   // Medium Purple
+            shininess: 120,
+            specular: 0xffffff
+        });
         const mesh = new THREE.Mesh(geometry, material);
         mesh.position.set(Math.sin(i)*5, Math.cos(i)*3, i-3);
         group.add(mesh);
@@ -172,8 +178,8 @@ loader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json
     camera.position.z = 12;
     function animate() {
         requestAnimationFrame(animate);
-        group.rotation.x += 0.005;
-        group.rotation.y += 0.01;
+        group.rotation.x += 0.006;
+        group.rotation.y += 0.012;
         renderer.render(scene, camera);
     }
     animate();
