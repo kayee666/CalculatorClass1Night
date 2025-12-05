@@ -19,6 +19,7 @@ range_min = st.sidebar.number_input("Range Minimum (x)", value=-5)
 range_max = st.sidebar.number_input("Range Maximum (x)", value=5)
 num_points = st.sidebar.slider("Number of points", 200, 2000, 500)
 plot_mode = st.sidebar.radio("Plot Mode:", ["2D", "3D"])
+animate = st.sidebar.checkbox("Aktifkan animasi 3D", value=False)
 
 # GIF kucing di sidebar
 st.sidebar.markdown(
@@ -61,9 +62,7 @@ st.markdown("""
 # 3D Background Animasi Calculus Symbols
 # ================
 st.markdown("""
-<!-- Canvas Background -->
 <canvas id="calcCanvas"></canvas>
-
 <style>
 #calcCanvas {
     position: fixed;
@@ -76,22 +75,16 @@ st.markdown("""
     filter: blur(1px) brightness(1.12);
 }
 </style>
-
 <script>
-// Setup canvas
 const canvas = document.getElementById('calcCanvas');
 const ctx = canvas.getContext('2d');
-
 function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 }
 resizeCanvas();
 window.onresize = resizeCanvas;
-
-// Calculus symbols
 const symbols = ["∫", "∂", "∇", "Σ", "∞", "√", "π", "dx", "dy", "lim", "f’", "∂x", "∂y"];
-
 let particles = [];
 for (let i = 0; i < 40; i++) {
     particles.push({
@@ -104,24 +97,19 @@ for (let i = 0; i < 40; i++) {
         size: Math.random() * 25 + 18
     });
 }
-
 function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
     particles.forEach(p => {
         ctx.font = (p.size * p.z) + "px serif";
         ctx.fillStyle = "rgba(255,255,255,0.35)";
         ctx.fillText(p.symbol, p.x, p.y);
-
         p.x += p.vx * p.z;
         p.y += p.vy * p.z;
-
         if (p.x < -50) p.x = canvas.width + 50;
         if (p.y < -50) p.y = canvas.height + 50;
         if (p.x > canvas.width + 50) p.x = -50;
         if (p.y > canvas.height + 50) p.y = -50;
     });
-
     requestAnimationFrame(animate);
 }
 animate();
@@ -132,7 +120,6 @@ animate();
 # Title
 # =======================
 st.markdown("<div class='big-title'>📈 Function & Derivative Visualizer</div>", unsafe_allow_html=True)
-
 
 # =======================
 # Symbolic Math
@@ -156,7 +143,6 @@ try:
     # ============= 2D Plot =============
     if plot_mode == "2D":
         col1, col2 = st.columns(2)
-
         with col1:
             st.markdown("<div class='sub-box'>", unsafe_allow_html=True)
             st.subheader("Graph f(x)")
@@ -165,7 +151,6 @@ try:
             ax1.grid(True, linestyle="--", alpha=0.5)
             st.pyplot(fig1)
             st.markdown("</div>", unsafe_allow_html=True)
-
         with col2:
             st.markdown("<div class='sub-box'>", unsafe_allow_html=True)
             st.subheader("Graph f'(x)")
@@ -175,19 +160,66 @@ try:
             st.pyplot(fig2)
             st.markdown("</div>", unsafe_allow_html=True)
 
-    # ============= 3D Plot =============
+    # ============= 3D Plot (Animated) =============
     else:
         st.markdown("<div class='sub-box'>", unsafe_allow_html=True)
-        st.subheader("3D Interactive Curve f(x) & f'(x)")
+        st.subheader("3D Interactive & Animated Curve f(x) & f'(x)")
 
         z_vals = np.zeros_like(x_vals)
         z_vals2 = np.ones_like(x_vals)
 
-        fig3d = go.Figure()
-        fig3d.add_trace(go.Scatter3d(x=x_vals, y=y_vals, z=z_vals, mode='lines',
-                                     line=dict(color='lightblue', width=5), name='f(x)'))
-        fig3d.add_trace(go.Scatter3d(x=x_vals, y=dy_vals, z=z_vals2, mode='lines',
-                                     line=dict(color='pink', width=5), name="f'(x)"))
+        if animate:
+            frames = []
+            t_values = np.linspace(0, 2*np.pi, 40)
+            for t in t_values:
+                y_anim = f_num(x_vals + 0.5*np.sin(t))
+                dy_anim = df_num(x_vals + 0.5*np.sin(t))
+                frame = go.Frame(
+                    data=[
+                        go.Scatter3d(x=x_vals, y=y_anim, z=z_vals, mode='lines',
+                                     line=dict(color='lightblue', width=5)),
+                        go.Scatter3d(x=x_vals, y=dy_anim, z=z_vals2, mode='lines',
+                                     line=dict(color='pink', width=5))
+                    ],
+                    name=str(t)
+                )
+                frames.append(frame)
+
+            fig3d = go.Figure(
+                data=[
+                    go.Scatter3d(x=x_vals, y=y_vals, z=z_vals, mode='lines',
+                                 line=dict(color='lightblue', width=5), name='f(x)'),
+                    go.Scatter3d(x=x_vals, y=dy_vals, z=z_vals2, mode='lines',
+                                 line=dict(color='pink', width=5), name="f'(x)")
+                ],
+                layout=go.Layout(
+                    updatemenus=[{
+                        "buttons": [
+                            {"args": [None, {"frame": {"duration": 100, "redraw": True},
+                                             "fromcurrent": True, "mode": "immediate"}],
+                             "label": "▶ Play", "method": "animate"},
+                            {"args": [[None], {"frame": {"duration": 0, "redraw": False},
+                                               "mode": "immediate"}],
+                             "label": "⏸ Pause", "method": "animate"}
+                        ],
+                        "direction": "left",
+                        "pad": {"r": 10, "t": 70},
+                        "showactive": False,
+                        "type": "buttons",
+                        "x": 0.1,
+                        "xanchor": "right",
+                        "y": 0,
+                        "yanchor": "top"
+                    }]
+                ),
+                frames=frames
+            )
+        else:
+            fig3d = go.Figure()
+            fig3d.add_trace(go.Scatter3d(x=x_vals, y=y_vals, z=z_vals, mode='lines',
+                                         line=dict(color='lightblue', width=5), name='f(x)'))
+            fig3d.add_trace(go.Scatter3d(x=x_vals, y=dy_vals, z=z_vals2, mode='lines',
+                                         line=dict(color='pink', width=5), name="f'(x)"))
 
         fig3d.update_layout(
             scene=dict(
