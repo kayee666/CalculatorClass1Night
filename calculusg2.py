@@ -393,6 +393,5 @@ with tab3:
         """, unsafe_allow_html=True)
     
     with col3:
-        st.markdown(f
+        st.markdown(f"""
         <div class="team-card">
-
