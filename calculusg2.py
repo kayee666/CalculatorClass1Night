@@ -50,7 +50,8 @@ translations = {
         "member3_name": "Charlie Brown",
         "member3_desc": "UI/UX Designer",
         "member4_name": "Diana Prince",
-        "member4_desc": "Project Manager"
+        "member4_desc": "Project Manager",
+        "calculus_group": "Calculus Group 2"
     },
     "Indonesia": {
         "settings": "Pengaturan",
@@ -84,7 +85,8 @@ translations = {
         "member3_name": "Charlie Brown",
         "member3_desc": "Desainer UI/UX",
         "member4_name": "Diana Prince",
-        "member4_desc": "Manajer Proyek"
+        "member4_desc": "Manajer Proyek",
+        "calculus_group": "Kelompok Kalkulus 2"
     }
 }
 
@@ -110,6 +112,29 @@ st.sidebar.markdown(
     </div>
     """, unsafe_allow_html=True
 )
+
+# =======================
+# Calculus Group 2 Section in Sidebar
+# =======================
+st.sidebar.markdown("---")  # Separator
+st.sidebar.subheader(t["calculus_group"])
+
+# Placeholder photos for members
+member_photos = [
+    "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face",
+    "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
+    "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face",
+    "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face"
+]
+
+for i in range(4):
+    st.sidebar.markdown(f"""
+    <div style="text-align: center; margin-bottom: 20px;">
+        <img src="{member_photos[i]}" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid #FFD580;" alt="Member {i+1}">
+        <p style="margin: 5px 0; font-size: 14px; font-weight: bold;">{t[f'member{i+1}_name']}</p>
+        <p style="margin: 0; font-size: 12px; color: #666;">{t[f'member{i+1}_desc']}</p>
+    </div>
+    """, unsafe_allow_html=True)
 
 # =======================
 # Main background + title
@@ -370,17 +395,3 @@ with tab3:
     with col3:
         st.markdown(f"""
         <div class="team-card">
-            <img src="{member_photos[2]}" class="team-img" alt="Member 3">
-            <h4>{t['member3_name']}</h4>
-            <p>{t['member3_desc']}</p>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with col4:
-        st.markdown(f"""
-        <div class="team-card">
-            <img src="{member_photos[3]}" class="team-img" alt="Member 4">
-            <h4>{t['member4_name']}</h4>
-            <p>{t['member4_desc']}</p>
-        </div>
-        """, unsafe_allow_html=True)
