@@ -39,7 +39,8 @@ translations = {
         "optimal_value": "Optimal Value:",
         "visualization": "Visualization",
         "example": "Example: Maximize the area of a rectangle with perimeter P=20. (Use x for width, P for perimeter)",
-        "sidebar_gif": "Cat GIF"
+        "sidebar_gif": "Cat GIF",
+        "unsupported": "Unsupported problem type. Supported: area/perimeter, volume/surface, profit."
     },
     "Indonesia": {
         "settings": "Pengaturan",
@@ -62,7 +63,8 @@ translations = {
         "optimal_value": "Nilai Optimal:",
         "visualization": "Visualisasi",
         "example": "Contoh: Maksimalkan luas persegi panjang dengan keliling P=20. (Gunakan x untuk lebar, P untuk keliling)",
-        "sidebar_gif": "GIF Kucing"
+        "sidebar_gif": "GIF Kucing",
+        "unsupported": "Tipe masalah tidak didukung. Didukung: luas/keliling, volume/permukaan, keuntungan."
     }
 }
 
@@ -202,51 +204,60 @@ with tab2:
     
     if st.button(t["solve_button"]):
         try:
-            # Simple parsing for supported cases
-            # Supported patterns:
-            # - Maximize area of rectangle with perimeter P
-            # - Maximize volume of box with surface area S
-            # - Maximize profit with cost C and price P (linear)
-            
+            # Improved parsing for supported cases (English and Indonesian)
             problem_lower = problem_text.lower()
             x = sp.symbols('x')
             
-            if "area" in problem_lower and "rectangle" in problem_lower and "perimeter" in problem_lower:
-                # Extract P from text (assume format like "perimeter 20")
-                match = re.search(r'perimeter\s+(\d+)', problem_lower)
+            # Keywords for area
+            area_keywords = ["area", "luas"]
+            rectangle_keywords = ["rectangle", "persegi panjang"]
+            perimeter_keywords = ["perimeter", "keliling"]
+            
+            # Keywords for volume
+            volume_keywords = ["volume", "volume"]
+            box_keywords = ["box", "kotak"]
+            surface_keywords = ["surface", "permukaan"]
+            
+            # Keywords for profit
+            profit_keywords = ["profit", "keuntungan"]
+            
+            # Check for area/perimeter
+            if any(k in problem_lower for k in area_keywords) and any(k in problem_lower for k in rectangle_keywords) and any(k in problem_lower for k in perimeter_keywords):
+                # Extract P (perimeter) from text (e.g., "keliling 20", "perimeter 20")
+                match = re.search(r'(?:keliling|perimeter)\s+(\d+)', problem_lower)
                 if match:
                     P = int(match.group(1))
                     func = x * (P/2 - x)  # Area = x * (P/2 - x)
                     goal = "maximize"
                 else:
-                    st.error("Could not extract perimeter value.")
+                    st.error("Could not extract perimeter value. Use format like 'keliling 20' or 'perimeter 20'.")
                     func = None
             
-            elif "volume" in problem_lower and "box" in problem_lower and "surface" in problem_lower:
-                # Extract S from text
-                match = re.search(r'surface\s+area\s+(\d+)', problem_lower)
+            # Check for volume/surface
+            elif any(k in problem_lower for k in volume_keywords) and any(k in problem_lower for k in box_keywords) and any(k in problem_lower for k in surface_keywords):
+                # Extract S (surface area)
+                match = re.search(r'(?:permukaan|surface)\s+area\s+(\d+)', problem_lower)
                 if match:
                     S = int(match.group(1))
-                    # Volume V = x*y*z, with 2(xy + xz + yz) = S
-                    # Assume square base for simplicity: V = x^2 * h, 2x^2 + 4x h = S -> h = (S - 2x^2)/(4x)
+                    # Volume V = x^2 * h, with 2x^2 + 4x h = S -> h = (S - 2x^2)/(4x)
                     func = x**2 * (S - 2*x**2)/(4*x)
                     goal = "maximize"
                 else:
-                    st.error("Could not extract surface area value.")
+                    st.error("Could not extract surface area value. Use format like 'permukaan area 20' or 'surface area 20'.")
                     func = None
             
-            elif "profit" in problem_lower:
-                # Assume linear profit: Profit = P*x - C*x^2 (simplified)
-                # Extract P and C if possible, else default
-                match_p = re.search(r'price\s+(\d+)', problem_lower)
-                match_c = re.search(r'cost\s+(\d+)', problem_lower)
+            # Check for profit
+            elif any(k in problem_lower for k in profit_keywords):
+                # Extract P (price) and C (cost) if possible
+                match_p = re.search(r'(?:price|harga)\s+(\d+)', problem_lower)
+                match_c = re.search(r'(?:cost|biaya)\s+(\d+)', problem_lower)
                 P = int(match_p.group(1)) if match_p else 10
                 C = int(match_c.group(1)) if match_c else 1
                 func = P*x - C*x**2
                 goal = "maximize"
             
             else:
-                st.error("Unsupported problem type. Supported: area/perimeter, volume/surface, profit.")
+                st.error(t["unsupported"])
                 func = None
             
             if func:
