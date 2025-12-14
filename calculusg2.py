@@ -40,7 +40,17 @@ translations = {
         "visualization": "Visualization",
         "example": "Example: Maximize the area of a rectangle with perimeter P=20. (Use x for width, P for perimeter)",
         "sidebar_gif": "Cat GIF",
-        "unsupported": "Unsupported problem type. Supported: area/perimeter, volume/surface, profit."
+        "unsupported": "Unsupported problem type. Supported: area/perimeter, volume/surface, profit.",
+        "team_title": "### Meet Our Team",
+        "team_desc": "The amazing team behind this app!",
+        "member1_name": "Alice Johnson",
+        "member1_desc": "Math Enthusiast & Developer",
+        "member2_name": "Bob Smith",
+        "member2_desc": "Data Scientist",
+        "member3_name": "Charlie Brown",
+        "member3_desc": "UI/UX Designer",
+        "member4_name": "Diana Prince",
+        "member4_desc": "Project Manager"
     },
     "Indonesia": {
         "settings": "Pengaturan",
@@ -64,7 +74,17 @@ translations = {
         "visualization": "Visualisasi",
         "example": "Contoh: Maksimalkan luas persegi panjang dengan keliling P=20. (Gunakan x untuk lebar, P untuk keliling)",
         "sidebar_gif": "GIF Kucing",
-        "unsupported": "Tipe masalah tidak didukung. Didukung: luas/keliling, volume/permukaan, keuntungan."
+        "unsupported": "Tipe masalah tidak didukung. Didukung: luas/keliling, volume/permukaan, keuntungan.",
+        "team_title": "### Temui Tim Kami",
+        "team_desc": "Tim hebat di balik aplikasi ini!",
+        "member1_name": "Alice Johnson",
+        "member1_desc": "Penggemar Matematika & Pengembang",
+        "member2_name": "Bob Smith",
+        "member2_desc": "Ilmuwan Data",
+        "member3_name": "Charlie Brown",
+        "member3_desc": "Desainer UI/UX",
+        "member4_name": "Diana Prince",
+        "member4_desc": "Manajer Proyek"
     }
 }
 
@@ -114,15 +134,34 @@ st.markdown("""
     color: #FFFFFF;
     margin-bottom: 20px;
 }
+.team-card {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transition: transform 0.3s ease;
+    margin-bottom: 20px;
+}
+.team-card:hover {
+    transform: scale(1.05);
+}
+.team-img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+}
 </style>
 """, unsafe_allow_html=True)
 
 st.markdown(f"<div class='big-title'>{t['title']}</div>", unsafe_allow_html=True)
 
 # =======================
-# Tabs for Function Visualizer and Optimization
+# Tabs for Function Visualizer, Optimization, and Team
 # =======================
-tab1, tab2 = st.tabs(["Function Visualizer", "Optimization Solver"])
+tab1, tab2, tab3 = st.tabs(["Function Visualizer", "Optimization Solver", "Team Members"])
 
 with tab1:
     # =======================
@@ -292,3 +331,56 @@ with tab2:
         except Exception as e:
             st.error("Error solving the problem.")
             st.error(str(e))
+
+with tab3:
+    # =======================
+    # Team Members Display
+    # =======================
+    st.markdown(t["team_title"])
+    st.markdown(t["team_desc"])
+    
+    # Placeholder photos (using Unsplash for random avatars)
+    member_photos = [
+        "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face",
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
+        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+        "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face"
+    ]
+    
+    col1, col2, col3, col4 = st.columns(4)
+    
+    with col1:
+        st.markdown(f"""
+        <div class="team-card">
+            <img src="{member_photos[0]}" class="team-img" alt="Member 1">
+            <h4>{t['member1_name']}</h4>
+            <p>{t['member1_desc']}</p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col2:
+        st.markdown(f"""
+        <div class="team-card">
+            <img src="{member_photos[1]}" class="team-img" alt="Member 2">
+            <h4>{t['member2_name']}</h4>
+            <p>{t['member2_desc']}</p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col3:
+        st.markdown(f"""
+        <div class="team-card">
+            <img src="{member_photos[2]}" class="team-img" alt="Member 3">
+            <h4>{t['member3_name']}</h4>
+            <p>{t['member3_desc']}</p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col4:
+        st.markdown(f"""
+        <div class="team-card">
+            <img src="{member_photos[3]}" class="team-img" alt="Member 4">
+            <h4>{t['member4_name']}</h4>
+            <p>{t['member4_desc']}</p>
+        </div>
+        """, unsafe_allow_html=True)
