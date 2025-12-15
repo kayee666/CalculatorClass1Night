@@ -14,14 +14,15 @@ st.set_page_config(
 # Custom CSS for colorful calculus theme (updated colors and cat gifs)
 st.markdown("""
 <style>
-    .main {background: #72c9e3; color: white;}
-    .sidebar .sidebar-content {background: #dea3ec; color: white;}
+    .main {background: #72c9e3 !important; color: white;}
+    .sidebar .sidebar-content {background: #dea3ec !important; color: white;}
     .stButton>button {background: linear-gradient(45deg, #ff6b6b, #4ecdc4); color: white; border-radius: 10px; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.2);}
     .stTextInput>div>div>input {border-radius: 10px; background: rgba(255,255,255,0.8); color: black;}
     .stSelectbox>div>div>select {border-radius: 10px; background: rgba(255,255,255,0.8); color: black;}
     h1, h2, h3 {color: #ffd700; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);}
     .card {background: rgba(255,255,255,0.9); padding: 20px; border-radius: 15px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); margin-bottom: 20px; backdrop-filter: blur(10px);}
     .gif-container {text-align: center; margin: 10px 0;}
+    body {background: #72c9e3 !important;}
 </style>
 """, unsafe_allow_html=True)
 
@@ -91,8 +92,7 @@ with st.sidebar.expander(texts["members_title"] + " 🧠"):
         with col2:
             st.markdown(f"**{member['name']}**<br>*{member['role']}*", unsafe_allow_html=True)
         st.markdown("---")
-    # Add another cat gif at the bottom
-    st.markdown('<div class="gif-container"><img src="https://media.giphy.com/media/3o7TKz9bX9Z8LxQ8Wk/giphy.gif" width="200" alt="Another Cute Cat"></div>', unsafe_allow_html=True)
+    # Removed the bottom cat gif as requested
 
 st.title(texts["title"])
 st.markdown(f"*{texts['subtitle']}*")
@@ -217,4 +217,3 @@ elif problem == "profit":
     x_opt = 500
     P_max = 100 * 500 - 0.1 * 500 ** 2 - 50
     st.success(f"Optimal x: {x_opt}, Max Profit: {P_max}")
-st.markdown('</div>', unsafe_allow_html=True)
