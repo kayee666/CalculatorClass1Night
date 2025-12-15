@@ -11,18 +11,68 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS for colorful calculus theme (updated colors and cat gifs)
+# Custom CSS for colorful calculus theme (updated background colors as requested)
 st.markdown("""
 <style>
-    .main {background: #72c9e3 !important; color: white;}
-    .sidebar .sidebar-content {background: #dea3ec !important; color: white;}
-    .stButton>button {background: linear-gradient(45deg, #ff6b6b, #4ecdc4); color: white; border-radius: 10px; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.2);}
-    .stTextInput>div>div>input {border-radius: 10px; background: rgba(255,255,255,0.8); color: black;}
-    .stSelectbox>div>div>select {border-radius: 10px; background: rgba(255,255,255,0.8); color: black;}
-    h1, h2, h3 {color: #ffd700; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);}
-    .card {background: rgba(255,255,255,0.9); padding: 20px; border-radius: 15px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); margin-bottom: 20px; backdrop-filter: blur(10px);}
-    .gif-container {text-align: center; margin: 10px 0;}
-    body {background: #72c9e3 !important;}
+    /* APP CONTAINER */
+    [data-testid="stApp"] {
+        background-color: #f0ffff !important;
+    }
+
+    /* MAIN CONTENT AREA */
+    [data-testid="stAppViewContainer"] {
+        background-color: #b9f2ff !important;
+    }
+
+    /* BLOCK CONTAINER (isi konten) */
+    [data-testid="stVerticalBlock"] {
+        background-color: #b9f2ff !important;
+    }
+
+    /* BODY fallback */
+    body {
+        background-color: #f0ffff !important;
+    }
+
+    /* SIDEBAR */
+    section[data-testid="stSidebar"] {
+        background-color: #f0ffff !important;
+    }
+
+    section[data-testid="stSidebar"] * {
+        background-color: #b9f2ff !important;
+    }
+
+    /* BUTTON */
+    .stButton>button {
+        background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+        color: #ffcba4;
+        border-radius: 10px;
+        border: none;
+    }
+
+    /* INPUT */
+    .stTextInput input,
+    .stSelectbox select {
+        background: rgba(255,255,255,0.9);
+        color: #ffcba4;
+        border-radius: 10px;
+    }
+
+    /* HEADERS */
+    h1, h2, h3 {
+        color: #f0ffff;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    /* CARD */
+.card {
+    background-color: #ffcba4 !important;
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -42,10 +92,10 @@ if lang == "English":
         "opt_select": "Select a problem:",
         "members_title": "Our Calculus Enthusiasts",
         "members": [
-            {"name": "Alice Johnson", "image": "https://via.placeholder.com/100x100?text=Alice", "role": "Derivative Expert"},
-            {"name": "Bob Smith", "image": "https://via.placeholder.com/100x100?text=Bob", "role": "Integral Guru"},
-            {"name": "Charlie Brown", "image": "https://via.placeholder.com/100x100?text=Charlie", "role": "Optimization Wizard"},
-            {"name": "Diana Prince", "image": "https://via.placeholder.com/100x100?text=Diana", "role": "3D Plot Specialist"}
+            {"name": "Rizki Adiputra", "image": "ki.jpeg", "role": "Leader"},
+            {"name": "Nailah Nurramadhanti", "image": "sayang.jpeg", "role": "Member"},
+            {"name": "Suci Khadijah Siregar", "image": "suci.jpeg", "role": "Member"},
+            {"name": "Salsabila Cantika", "image": "cantika.jpeg", "role": "Member"}
         ],
         "problems": {
             "area": "Maximize area of a rectangle with fixed perimeter.",
@@ -67,10 +117,10 @@ else:
         "opt_select": "Pilih masalah:",
         "members_title": "Penggemar Kalkulus Kami",
         "members": [
-            {"name": "Alice Johnson", "image": "https://via.placeholder.com/100x100?text=Alice", "role": "Ahli Turunan"},
-            {"name": "Nailah Nurramadhanti", "sayang": "sayang", "role": "Guru Integral"},
-            {"name": "Charlie Brown", "image": "https://via.placeholder.com/100x100?text=Charlie", "role": "Penyihir Optimasi"},
-            {"name": "Diana Prince", "image": "https://via.placeholder.com/100x100?text=Diana", "role": "Spesialis Plot 3D"}
+            {"name": "Rizki Adiputra", "image": "ki.jpeg", "role": "Leader"},
+            {"name": "Nailah Nurramadhanti", "image": "sayang.jpeg", "role": "Member"},
+            {"name": "Suci Khadijah Siregar", "image": "suci.jpeg", "role": "Member"},
+            {"name": "Salsabila Cantika", "image": "cantika.jpeg", "role": "Member"}
         ],
         "problems": {
             "area": "Maksimalkan luas persegi panjang dengan keliling tetap.",
@@ -88,7 +138,7 @@ with st.sidebar.expander(texts["members_title"] + " 🧠"):
     for member in texts["members"]:
         col1, col2 = st.columns([1, 3])
         with col1:
-            st.image(member["image"], width=60, caption="📸")
+            st.image(member["image"], width=60)
         with col2:
             st.markdown(f"**{member['name']}**<br>*{member['role']}*", unsafe_allow_html=True)
         st.markdown("---")
@@ -113,7 +163,7 @@ if st.button(texts["plot_button"]):
         ax.set_ylabel('f(x)', fontsize=12, color='white')
         ax.set_title('2D Plot of Function', fontsize=14, color='#ffd700')
         ax.grid(True, alpha=0.5, color='white')
-        ax.set_facecolor((0, 0, 0, 0.1))  # Fixed RGBA to tuple
+        ax.set_facecolor((0, 0, 0, 0.1))
         st.pyplot(fig)
     except Exception as e:
         st.error(f"Error: {e}")
@@ -135,41 +185,49 @@ if st.button(texts["derivative_button"]):
         ax.set_ylabel("f'(x)", fontsize=12, color='white')
         ax.set_title('2D Plot of Numerical Derivative', fontsize=14, color='#4ecdc4')
         ax.grid(True, alpha=0.5, color='white')
-        ax.set_facecolor((0, 0, 0, 0.1))  # Fixed RGBA to tuple
+        ax.set_facecolor((0, 0, 0, 0.1))
         st.pyplot(fig)
         st.info("Note: This is a numerical approximation of the derivative using calculus principles.")
     except Exception as e:
         st.error(f"Error: {e}")
 st.markdown('</div>', unsafe_allow_html=True)
 
-# 3D Plotting section (using matplotlib)
+# 3D Plotting section (using matplotlib) - Simple wireframe
 st.markdown('<div class="card">', unsafe_allow_html=True)
 st.header("🌐 3D Surface Plotting")
 func_3d_str = st.text_input(texts["3d_input"], "lambda x, y: x**2 + y**2")
 
-if st.button(texts["3d_button"]):
-    try:
-        func_3d = eval(func_3d_str)
-        x = np.linspace(-5, 5, 50)
-        y = np.linspace(-5, 5, 50)
-        X, Y = np.meshgrid(x, y)
-        Z = func_3d(X, Y)
-        
-        fig = plt.figure(figsize=(8, 6))
-        ax = fig.add_subplot(111, projection='3d')
-        surf = ax.plot_surface(X, Y, Z, cmap='plasma', alpha=0.8, edgecolor='none')
-        ax.set_xlabel('x', fontsize=12, color='white')
-        ax.set_ylabel('y', fontsize=12, color='white')
-        ax.set_zlabel('z', fontsize=12, color='white')
-        ax.set_title('3D Surface Plot', fontsize=14, color='#ffd700')
-        ax.set_facecolor((0, 0, 0, 0.1))  # Fixed RGBA to tuple
-        fig.colorbar(surf, ax=ax, shrink=0.5, aspect=5)
-        st.pyplot(fig)
-        st.info("Explore partial derivatives and integrals in 3D space!")
-        # Add a cat gif below the plot
-        st.markdown('<div class="gif-container"><img src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif" width="300" alt="Cute Cat Animation"></div>', unsafe_allow_html=True)
-    except Exception as e:
-        st.error(f"Error: {e}")
+# 3D Plotting section (SIMPLIFIED)
+st.markdown('<div class="card">', unsafe_allow_html=True)
+st.header("🌐 Simple 3D Surface Plot")
+
+surface_type = st.selectbox(
+    "Choose a surface:",
+    ["x² + y²", "sin(x) + cos(y)", "x · y"]
+)
+
+# Define surface
+x = np.linspace(-5, 5, 50)
+y = np.linspace(-5, 5, 50)
+X, Y = np.meshgrid(x, y)
+
+if surface_type == "x² + y²":
+    Z = X**2 + Y**2
+elif surface_type == "sin(x) + cos(y)":
+    Z = np.sin(X) + np.cos(Y)
+else:
+    Z = X * Y
+
+fig = plt.figure(figsize=(7, 5))
+ax = fig.add_subplot(111, projection="3d")
+
+ax.plot_surface(X, Y, Z, cmap="viridis", edgecolor="none")
+ax.set_xlabel("x")
+ax.set_ylabel("y")
+ax.set_zlabel("z")
+ax.set_title("3D Surface Plot")
+
+st.pyplot(fig)
 st.markdown('</div>', unsafe_allow_html=True)
 
 # Optimization section
@@ -218,5 +276,3 @@ elif problem == "profit":
     P_max = 100 * 500 - 0.1 * 500 ** 2 - 50
     st.success(f"Optimal x: {x_opt}, Max Profit: {P_max}")
 st.markdown('</div>', unsafe_allow_html=True)
-
-
