@@ -203,4 +203,18 @@ elif problem == "volume":
     if lang == "English":
         st.write("Maximize volume V = x*y*z, subject to surface area 2xy + 2xz + 2yz = S. Enter S:")
     else:
-        st.write("Maksimalkan
+        st.write("Maksimalkan volume V = x*y*z, dengan luas permukaan 2xy + 2xz + 2yz = S. Masukkan S:")
+    S = st.number_input("S", value=24.0)
+    x_opt = np.sqrt(S / 6)
+    V_max = x_opt ** 3
+    st.success(f"Optimal x=y=z: {x_opt}, Max Volume: {V_max}")
+
+elif problem == "profit":
+    if lang == "English":
+        st.write("Maximize profit P = 100x - 0.1x^2 - 50, where x is quantity.")
+    else:
+        st.write("Maksimalkan keuntungan P = 100x - 0.1x^2 - 50, di mana x adalah jumlah.")
+    x_opt = 500
+    P_max = 100 * 500 - 0.1 * 500 ** 2 - 50
+    st.success(f"Optimal x: {x_opt}, Max Profit: {P_max}")
+st.markdown('</div>', unsafe_allow_html=True)
