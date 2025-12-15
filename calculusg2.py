@@ -68,7 +68,7 @@ else:
         "members_title": "Penggemar Kalkulus Kami",
         "members": [
             {"name": "Alice Johnson", "image": "https://via.placeholder.com/100x100?text=Alice", "role": "Ahli Turunan"},
-            {"name": "Nailah Nurramadhanti", "sayang": "https://via.placeholder.com/100x100?text=Bob", "role": "Guru Integral"},
+            {"name": "Nailah Nurramadhanti", "sayang": "sayang", "role": "Guru Integral"},
             {"name": "Charlie Brown", "image": "https://via.placeholder.com/100x100?text=Charlie", "role": "Penyihir Optimasi"},
             {"name": "Diana Prince", "image": "https://via.placeholder.com/100x100?text=Diana", "role": "Spesialis Plot 3D"}
         ],
@@ -218,4 +218,5 @@ elif problem == "profit":
     P_max = 100 * 500 - 0.1 * 500 ** 2 - 50
     st.success(f"Optimal x: {x_opt}, Max Profit: {P_max}")
 st.markdown('</div>', unsafe_allow_html=True)
+
 
