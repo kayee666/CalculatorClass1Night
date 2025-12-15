@@ -2,6 +2,8 @@ import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
+import matplotlib.animation as animation
+import base64
 
 # Set page config for theme
 st.set_page_config(
@@ -11,16 +13,23 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS for calculus theme (blue and green tones)
+# Function to encode gif for embedding
+def get_gif_base64(gif_path):
+    with open(gif_path, "rb") as f:
+        data = f.read()
+    return base64.b64encode(data).decode()
+
+# Custom CSS for colorful calculus theme (gradients and vibrant colors)
 st.markdown("""
 <style>
-    .main {background-color: #f0f8ff;}
-    .sidebar .sidebar-content {background-color: #e6f7ff;}
-    .stButton>button {background-color: #4CAF50; color: white; border-radius: 10px;}
-    .stTextInput>div>div>input {border-radius: 10px;}
-    .stSelectbox>div>div>select {border-radius: 10px;}
-    h1, h2, h3 {color: #2E86AB;}
-    .card {background-color: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); margin-bottom: 20px;}
+    .main {background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;}
+    .sidebar .sidebar-content {background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white;}
+    .stButton>button {background: linear-gradient(45deg, #ff6b6b, #4ecdc4); color: white; border-radius: 10px; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.2);}
+    .stTextInput>div>div>input {border-radius: 10px; background: rgba(255,255,255,0.8); color: black;}
+    .stSelectbox>div>div>select {border-radius: 10px; background: rgba(255,255,255,0.8); color: black;}
+    h1, h2, h3 {color: #ffd700; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);}
+    .card {background: rgba(255,255,255,0.9); padding: 20px; border-radius: 15px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); margin-bottom: 20px; backdrop-filter: blur(10px);}
+    .gif-container {text-align: center; margin: 10px 0;}
 </style>
 """, unsafe_allow_html=True)
 
@@ -30,7 +39,7 @@ lang = st.sidebar.selectbox("Language", ["English", "Indonesia"])
 if lang == "English":
     texts = {
         "title": "🧮 Calculus Explorer",
-        "subtitle": "Dive into the world of derivatives, integrals, and optimizations!",
+        "subtitle": "Dive into the vibrant world of derivatives, integrals, and optimizations!",
         "function_input": "Enter a function of x (e.g., lambda x: x**2 + 3*x + 1):",
         "plot_button": "Plot 2D Function",
         "derivative_button": "Compute and Plot Derivative",
@@ -55,7 +64,7 @@ if lang == "English":
 else:
     texts = {
         "title": "🧮 Penjelajah Kalkulus",
-        "subtitle": "Jelajahi dunia turunan, integral, dan optimasi!",
+        "subtitle": "Jelajahi dunia turunan, integral, dan optimasi yang berwarna!",
         "function_input": "Masukkan fungsi dari x (contoh: lambda x: x**2 + 3*x + 1):",
         "plot_button": "Plot Fungsi 2D",
         "derivative_button": "Hitung dan Plot Turunan",
@@ -78,8 +87,11 @@ else:
         }
     }
 
-# Sidebar: Our Members section with calculus theme
+# Sidebar: Our Members section with calculus theme and 3D gif
 with st.sidebar.expander(texts["members_title"] + " 🧠"):
+    # Add a 3D math gif at the top
+    st.markdown('<div class="gif-container"><img src="https://media.giphy.com/media/3o7TKz9bX9Z8LxQ8Wk/giphy.gif" width="200" alt="3D Math Animation"></div>', unsafe_allow_html=True)
+    st.markdown("---")
     for member in texts["members"]:
         col1, col2 = st.columns([1, 3])
         with col1:
@@ -87,6 +99,8 @@ with st.sidebar.expander(texts["members_title"] + " 🧠"):
         with col2:
             st.markdown(f"**{member['name']}**<br>*{member['role']}*", unsafe_allow_html=True)
         st.markdown("---")
+    # Add another 3D gif at the bottom
+    st.markdown('<div class="gif-container"><img src="https://media.giphy.com/media/l0HlBO7eyXzSZkJri/giphy.gif" width="200" alt="Calculus 3D"></div>', unsafe_allow_html=True)
 
 st.title(texts["title"])
 st.markdown(f"*{texts['subtitle']}*")
@@ -102,12 +116,13 @@ if st.button(texts["plot_button"]):
         x_vals = np.linspace(-10, 10, 400)
         y_vals = func(x_vals)
         fig, ax = plt.subplots(figsize=(8, 5))
-        ax.plot(x_vals, y_vals, color='#2E86AB', linewidth=2)
-        ax.fill_between(x_vals, y_vals, alpha=0.3, color='#A23B72')
-        ax.set_xlabel('x', fontsize=12)
-        ax.set_ylabel('f(x)', fontsize=12)
-        ax.set_title('2D Plot of Function', fontsize=14, color='#2E86AB')
-        ax.grid(True, alpha=0.5)
+        ax.plot(x_vals, y_vals, color='#ffd700', linewidth=3)
+        ax.fill_between(x_vals, y_vals, alpha=0.5, color='#ff6b6b')
+        ax.set_xlabel('x', fontsize=12, color='white')
+        ax.set_ylabel('f(x)', fontsize=12, color='white')
+        ax.set_title('2D Plot of Function', fontsize=14, color='#ffd700')
+        ax.grid(True, alpha=0.5, color='white')
+        ax.set_facecolor('rgba(0,0,0,0.1)')
         st.pyplot(fig)
     except Exception as e:
         st.error(f"Error: {e}")
@@ -122,19 +137,20 @@ if st.button(texts["derivative_button"]):
         y_vals = func(x_vals)
         deriv_vals = np.gradient(y_vals, x_vals)
         fig, ax = plt.subplots(figsize=(8, 5))
-        ax.plot(x_vals, deriv_vals, color='#F18F01', linewidth=2)
-        ax.fill_between(x_vals, deriv_vals, alpha=0.3, color='#C73E1D')
-        ax.set_xlabel('x', fontsize=12)
-        ax.set_ylabel("f'(x)", fontsize=12)
-        ax.set_title('2D Plot of Numerical Derivative', fontsize=14, color='#F18F01')
-        ax.grid(True, alpha=0.5)
+        ax.plot(x_vals, deriv_vals, color='#4ecdc4', linewidth=3)
+        ax.fill_between(x_vals, deriv_vals, alpha=0.5, color='#45b7d1')
+        ax.set_xlabel('x', fontsize=12, color='white')
+        ax.set_ylabel("f'(x)", fontsize=12, color='white')
+        ax.set_title('2D Plot of Numerical Derivative', fontsize=14, color='#4ecdc4')
+        ax.grid(True, alpha=0.5, color='white')
+        ax.set_facecolor('rgba(0,0,0,0.1)')
         st.pyplot(fig)
         st.info("Note: This is a numerical approximation of the derivative using calculus principles.")
     except Exception as e:
         st.error(f"Error: {e}")
 st.markdown('</div>', unsafe_allow_html=True)
 
-# 3D Plotting section (using matplotlib)
+# 3D Plotting section (using matplotlib with animation attempt)
 st.markdown('<div class="card">', unsafe_allow_html=True)
 st.header("🌐 3D Surface Plotting")
 func_3d_str = st.text_input(texts["3d_input"], "lambda x, y: x**2 + y**2")
@@ -149,13 +165,17 @@ if st.button(texts["3d_button"]):
         
         fig = plt.figure(figsize=(8, 6))
         ax = fig.add_subplot(111, projection='3d')
-        ax.plot_surface(X, Y, Z, cmap='viridis', alpha=0.8)
-        ax.set_xlabel('x', fontsize=12)
-        ax.set_ylabel('y', fontsize=12)
-        ax.set_zlabel('z', fontsize=12)
-        ax.set_title('3D Surface Plot', fontsize=14, color='#2E86AB')
+        surf = ax.plot_surface(X, Y, Z, cmap='plasma', alpha=0.8, edgecolor='none')
+        ax.set_xlabel('x', fontsize=12, color='white')
+        ax.set_ylabel('y', fontsize=12, color='white')
+        ax.set_zlabel('z', fontsize=12, color='white')
+        ax.set_title('3D Surface Plot', fontsize=14, color='#ffd700')
+        ax.set_facecolor('rgba(0,0,0,0.1)')
+        fig.colorbar(surf, ax=ax, shrink=0.5, aspect=5)
         st.pyplot(fig)
         st.info("Explore partial derivatives and integrals in 3D space!")
+        # Add a 3D gif below the plot
+        st.markdown('<div class="gif-container"><img src="https://media.giphy.com/media/3o7TKz9bX9Z8LxQ8Wk/giphy.gif" width="300" alt="3D Surface Animation"></div>', unsafe_allow_html=True)
     except Exception as e:
         st.error(f"Error: {e}")
 st.markdown('</div>', unsafe_allow_html=True)
