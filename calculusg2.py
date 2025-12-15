@@ -113,7 +113,7 @@ if st.button(texts["plot_button"]):
         ax.set_ylabel('f(x)', fontsize=12, color='white')
         ax.set_title('2D Plot of Function', fontsize=14, color='#ffd700')
         ax.grid(True, alpha=0.5, color='white')
-        ax.set_facecolor('rgba(0,0,0,0.1)')
+        ax.set_facecolor((0, 0, 0, 0.1))  # Fixed RGBA to tuple
         st.pyplot(fig)
     except Exception as e:
         st.error(f"Error: {e}")
@@ -135,7 +135,7 @@ if st.button(texts["derivative_button"]):
         ax.set_ylabel("f'(x)", fontsize=12, color='white')
         ax.set_title('2D Plot of Numerical Derivative', fontsize=14, color='#4ecdc4')
         ax.grid(True, alpha=0.5, color='white')
-        ax.set_facecolor('rgba(0,0,0,0.1)')
+        ax.set_facecolor((0, 0, 0, 0.1))  # Fixed RGBA to tuple
         st.pyplot(fig)
         st.info("Note: This is a numerical approximation of the derivative using calculus principles.")
     except Exception as e:
@@ -162,7 +162,7 @@ if st.button(texts["3d_button"]):
         ax.set_ylabel('y', fontsize=12, color='white')
         ax.set_zlabel('z', fontsize=12, color='white')
         ax.set_title('3D Surface Plot', fontsize=14, color='#ffd700')
-        ax.set_facecolor('rgba(0,0,0,0.1)')
+        ax.set_facecolor((0, 0, 0, 0.1))  # Fixed RGBA to tuple
         fig.colorbar(surf, ax=ax, shrink=0.5, aspect=5)
         st.pyplot(fig)
         st.info("Explore partial derivatives and integrals in 3D space!")
