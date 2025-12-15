@@ -2,8 +2,6 @@ import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
-import matplotlib.animation as animation
-import base64
 
 # Set page config for theme
 st.set_page_config(
@@ -13,17 +11,11 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Function to encode gif for embedding
-def get_gif_base64(gif_path):
-    with open(gif_path, "rb") as f:
-        data = f.read()
-    return base64.b64encode(data).decode()
-
-# Custom CSS for colorful calculus theme (gradients and vibrant colors)
+# Custom CSS for colorful calculus theme (updated colors and cat gifs)
 st.markdown("""
 <style>
-    .main {background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;}
-    .sidebar .sidebar-content {background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white;}
+    .main {background: #72c9e3; color: white;}
+    .sidebar .sidebar-content {background: #dea3ec; color: white;}
     .stButton>button {background: linear-gradient(45deg, #ff6b6b, #4ecdc4); color: white; border-radius: 10px; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.2);}
     .stTextInput>div>div>input {border-radius: 10px; background: rgba(255,255,255,0.8); color: black;}
     .stSelectbox>div>div>select {border-radius: 10px; background: rgba(255,255,255,0.8); color: black;}
@@ -87,10 +79,10 @@ else:
         }
     }
 
-# Sidebar: Our Members section with calculus theme and 3D gif
+# Sidebar: Our Members section with calculus theme and cat gifs
 with st.sidebar.expander(texts["members_title"] + " 🧠"):
-    # Add a 3D math gif at the top
-    st.markdown('<div class="gif-container"><img src="https://media.giphy.com/media/3o7TKz9bX9Z8LxQ8Wk/giphy.gif" width="200" alt="3D Math Animation"></div>', unsafe_allow_html=True)
+    # Add a cat gif at the top
+    st.markdown('<div class="gif-container"><img src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif" width="200" alt="Cute Cat Animation"></div>', unsafe_allow_html=True)
     st.markdown("---")
     for member in texts["members"]:
         col1, col2 = st.columns([1, 3])
@@ -99,8 +91,8 @@ with st.sidebar.expander(texts["members_title"] + " 🧠"):
         with col2:
             st.markdown(f"**{member['name']}**<br>*{member['role']}*", unsafe_allow_html=True)
         st.markdown("---")
-    # Add another 3D gif at the bottom
-    st.markdown('<div class="gif-container"><img src="https://media.giphy.com/media/l0HlBO7eyXzSZkJri/giphy.gif" width="200" alt="Calculus 3D"></div>', unsafe_allow_html=True)
+    # Add another cat gif at the bottom
+    st.markdown('<div class="gif-container"><img src="https://media.giphy.com/media/3o7TKz9bX9Z8LxQ8Wk/giphy.gif" width="200" alt="Another Cute Cat"></div>', unsafe_allow_html=True)
 
 st.title(texts["title"])
 st.markdown(f"*{texts['subtitle']}*")
@@ -150,7 +142,7 @@ if st.button(texts["derivative_button"]):
         st.error(f"Error: {e}")
 st.markdown('</div>', unsafe_allow_html=True)
 
-# 3D Plotting section (using matplotlib with animation attempt)
+# 3D Plotting section (using matplotlib)
 st.markdown('<div class="card">', unsafe_allow_html=True)
 st.header("🌐 3D Surface Plotting")
 func_3d_str = st.text_input(texts["3d_input"], "lambda x, y: x**2 + y**2")
@@ -174,8 +166,8 @@ if st.button(texts["3d_button"]):
         fig.colorbar(surf, ax=ax, shrink=0.5, aspect=5)
         st.pyplot(fig)
         st.info("Explore partial derivatives and integrals in 3D space!")
-        # Add a 3D gif below the plot
-        st.markdown('<div class="gif-container"><img src="https://media.giphy.com/media/3o7TKz9bX9Z8LxQ8Wk/giphy.gif" width="300" alt="3D Surface Animation"></div>', unsafe_allow_html=True)
+        # Add a cat gif below the plot
+        st.markdown('<div class="gif-container"><img src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif" width="300" alt="Cute Cat Animation"></div>', unsafe_allow_html=True)
     except Exception as e:
         st.error(f"Error: {e}")
 st.markdown('</div>', unsafe_allow_html=True)
