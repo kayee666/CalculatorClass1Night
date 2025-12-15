@@ -1,7 +1,6 @@
 import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
-import sympy as sp
 
 # Language selection
 lang = st.sidebar.selectbox("Language", ["English", "Indonesia"])
@@ -9,11 +8,18 @@ lang = st.sidebar.selectbox("Language", ["English", "Indonesia"])
 if lang == "English":
     texts = {
         "title": "Math Application",
-        "function_input": "Enter a function of x (e.g., x**2 + 3*x + 1):",
+        "function_input": "Enter a function of x (e.g., lambda x: x**2 + 3*x + 1):",
         "plot_button": "Plot Function",
         "derivative_button": "Compute and Plot Derivative",
         "opt_title": "Optimization Problems",
         "opt_select": "Select a problem:",
+        "members_title": "Our Members",
+        "members": [
+            {"name": "Alice Johnson", "image": "https://via.placeholder.com/100x100?text=Alice"},
+            {"name": "Bob Smith", "image": "https://via.placeholder.com/100x100?text=Bob"},
+            {"name": "Charlie Brown", "image": "https://via.placeholder.com/100x100?text=Charlie"},
+            {"name": "Diana Prince", "image": "https://via.placeholder.com/100x100?text=Diana"}
+        ],
         "problems": {
             "area": "Maximize area of a rectangle with fixed perimeter.",
             "perimeter": "Minimize perimeter for fixed area.",
@@ -24,11 +30,18 @@ if lang == "English":
 else:
     texts = {
         "title": "Aplikasi Matematika",
-        "function_input": "Masukkan fungsi dari x (contoh: x**2 + 3*x + 1):",
+        "function_input": "Masukkan fungsi dari x (contoh: lambda x: x**2 + 3*x + 1):",
         "plot_button": "Plot Fungsi",
         "derivative_button": "Hitung dan Plot Turunan",
         "opt_title": "Masalah Optimasi",
         "opt_select": "Pilih masalah:",
+        "members_title": "Anggota Kami",
+        "members": [
+            {"name": "Alice Johnson", "image": "https://via.placeholder.com/100x100?text=Alice"},
+            {"name": "Bob Smith", "image": "https://via.placeholder.com/100x100?text=Bob"},
+            {"name": "Charlie Brown", "image": "https://via.placeholder.com/100x100?text=Charlie"},
+            {"name": "Diana Prince", "image": "https://via.placeholder.com/100x100?text=Diana"}
+        ],
         "problems": {
             "area": "Maksimalkan luas persegi panjang dengan keliling tetap.",
             "perimeter": "Minimalkan keliling untuk luas tetap.",
@@ -37,19 +50,28 @@ else:
         }
     }
 
+# Sidebar: Our Members section
+with st.sidebar.expander(texts["members_title"]):
+    for member in texts["members"]:
+        col1, col2 = st.columns([1, 3])
+        with col1:
+            st.image(member["image"], width=50)
+        with col2:
+            st.write(f"**{member['name']}**")
+            st.write("---")  # Separator for visual appeal
+
 st.title(texts["title"])
 
 # Function plotting section
 st.header("Function Plotting")
-func_str = st.text_input(texts["function_input"], "x**2")
+func_str = st.text_input(texts["function_input"], "lambda x: x**2")
 
 if st.button(texts["plot_button"]):
     try:
-        x = sp.symbols('x')
-        func = sp.sympify(func_str)
-        f = sp.lambdify(x, func, 'numpy')
+        # Safely evaluate the lambda function
+        func = eval(func_str)
         x_vals = np.linspace(-10, 10, 400)
-        y_vals = f(x_vals)
+        y_vals = func(x_vals)
         fig, ax = plt.subplots()
         ax.plot(x_vals, y_vals)
         ax.set_xlabel('x')
@@ -59,26 +81,26 @@ if st.button(texts["plot_button"]):
     except Exception as e:
         st.error(f"Error: {e}")
 
-# Derivative section
+# Derivative section (numerical)
 if st.button(texts["derivative_button"]):
     try:
-        x = sp.symbols('x')
-        func = sp.sympify(func_str)
-        deriv = sp.diff(func, x)
-        st.write(f"Derivative: {deriv}")
-        d = sp.lambdify(x, deriv, 'numpy')
+        func = eval(func_str)
         x_vals = np.linspace(-10, 10, 400)
-        y_vals = d(x_vals)
+        y_vals = func(x_vals)
+        # Numerical derivative using central difference
+        h = 1e-5
+        deriv_vals = np.gradient(y_vals, x_vals)
         fig, ax = plt.subplots()
-        ax.plot(x_vals, y_vals)
+        ax.plot(x_vals, deriv_vals)
         ax.set_xlabel('x')
         ax.set_ylabel("f'(x)")
-        ax.set_title('Plot of Derivative')
+        ax.set_title('Plot of Numerical Derivative')
         st.pyplot(fig)
+        st.write("Note: This is a numerical approximation of the derivative.")
     except Exception as e:
         st.error(f"Error: {e}")
 
-# Optimization section
+# Optimization section (unchanged)
 st.header(texts["opt_title"])
 problem = st.selectbox(texts["opt_select"], list(texts["problems"].keys()), format_func=lambda x: texts["problems"][x])
 
