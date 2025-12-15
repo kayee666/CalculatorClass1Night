@@ -2,7 +2,6 @@ import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
-import plotly.graph_objects as go
 
 # Set page config for theme
 st.set_page_config(
@@ -135,7 +134,7 @@ if st.button(texts["derivative_button"]):
         st.error(f"Error: {e}")
 st.markdown('</div>', unsafe_allow_html=True)
 
-# 3D Plotting section
+# 3D Plotting section (using matplotlib)
 st.markdown('<div class="card">', unsafe_allow_html=True)
 st.header("🌐 3D Surface Plotting")
 func_3d_str = st.text_input(texts["3d_input"], "lambda x, y: x**2 + y**2")
@@ -148,19 +147,14 @@ if st.button(texts["3d_button"]):
         X, Y = np.meshgrid(x, y)
         Z = func_3d(X, Y)
         
-        fig = go.Figure(data=[go.Surface(z=Z, x=X, y=Y, colorscale='Viridis')])
-        fig.update_layout(
-            title='3D Surface Plot',
-            scene=dict(
-                xaxis_title='x',
-                yaxis_title='y',
-                zaxis_title='z',
-                bgcolor='rgba(0,0,0,0)'
-            ),
-            width=800,
-            height=600
-        )
-        st.plotly_chart(fig)
+        fig = plt.figure(figsize=(8, 6))
+        ax = fig.add_subplot(111, projection='3d')
+        ax.plot_surface(X, Y, Z, cmap='viridis', alpha=0.8)
+        ax.set_xlabel('x', fontsize=12)
+        ax.set_ylabel('y', fontsize=12)
+        ax.set_zlabel('z', fontsize=12)
+        ax.set_title('3D Surface Plot', fontsize=14, color='#2E86AB')
+        st.pyplot(fig)
         st.info("Explore partial derivatives and integrals in 3D space!")
     except Exception as e:
         st.error(f"Error: {e}")
